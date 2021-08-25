@@ -8,7 +8,9 @@ d3.json(queryUrl).then(function (data) {
   createFeatures(data.features);
 });
 
-
+function markerSize(magnitude) {
+  return Math.sqrt(magnitude) * 50;
+};
 
 function createFeatures(earthquakeData) {
 
@@ -25,15 +27,17 @@ function createFeatures(earthquakeData) {
     onEachFeature: onEachFeature
   });
   console.log(earthquakes)
+  console.log(earthquakeData)
+
 
 // loop through earthquake array & assign marker colors for each
-  for (var i = 0; i < earthquakes.length; i++) {
+  for (var i = 0; i < earthquakeData.length; i++) {
 
     // set locations to make easier to call
-    var lat = earthquakes[i].features.geometry.coordinates[1]
-    var lon = earthquakes[i].features.geometry.coordinates[0]
-    var depth = earthquakes[i].features.geometry.coordinates[2]
-    var lat_lon = [lat, lon]
+    var lat = earthquakeData[i].geometry.coordinates[1]
+    var lon = earthquakeData[i].geometry.coordinates[0]
+    var depth = earthquakeData[i].geometry.coordinates[2]
+    var lat_long = [lat, lon]
 
     // conditionals
     var color = "";
@@ -56,13 +60,15 @@ function createFeatures(earthquakeData) {
       color = "#99b3ff";
     };
     // Add circles to the map.
-    L.circle(earthquakes[i].lat_lon, {
-      fillOpacity: 1,
-      color: "white",
+    L.circle(earthquakeData[i].lat_long, {
+      fillOpacity: 0.80,
+      color: color,
       fillColor: color,
       // Adjust the radius.
-      radius: Math.sqrt(earthquakes[i].features.properties.mag) * 100
-    }).addTo(myMap);
+      radius: markerSize(earthquakeData[i].properties.mag)
+    })
+    // .addTo(myMap)
+    ;
     
     console.log(color);
     
