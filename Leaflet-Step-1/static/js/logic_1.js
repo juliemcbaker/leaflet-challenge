@@ -8,12 +8,15 @@ d3.json(queryUrl).then(function (data) {
   createFeatures(data.features);
 });
 
+
+
 function createFeatures(earthquakeData) {
 
   // Define a function that we want to run once for each feature in the features array.
   // Give each feature a popup that describes the place and time of the earthquake.
   function onEachFeature(feature, layer) {
-    layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><p>${new Date(feature.properties.time)}</p>`);
+    layer.bindPopup(`<h3>${feature.properties.place}</h3><hr><h4>Magnitude: ${feature.properties.mag}</h4><hr>
+    <h4>Depth: ${feature.geometry.coordinates[2]}</h4><hr><p>${new Date(feature.properties.time)}</p>`);
   }
 
   // Create a GeoJSON layer that contains the features array on the earthquakeData object.
@@ -21,10 +24,59 @@ function createFeatures(earthquakeData) {
   var earthquakes = L.geoJSON(earthquakeData, {
     onEachFeature: onEachFeature
   });
+  console.log(earthquakes)
+
+// loop through earthquake array & assign marker colors for each
+  for (var i = 0; i < earthquakes.length; i++) {
+
+    // set locations to make easier to call
+    var lat = earthquakes[i].features.geometry.coordinates[1]
+    var lon = earthquakes[i].features.geometry.coordinates[0]
+    var depth = earthquakes[i].features.geometry.coordinates[2]
+    var lat_lon = [lat, lon]
+
+    // conditionals
+    var color = "";
+    if (depth > 200) {
+      color = "#00134d";
+    }
+    else if (depth > 100) {
+      color = "#002080";
+    }
+    else if (depth > 50) {
+      color = "#0033cc";
+    }
+    else if (depth > 25) {
+      color = "#1a53ff";
+    }
+    else if (depth > 10) {
+      color = "#4d79ff";
+    }
+    else {
+      color = "#99b3ff";
+    };
+    // Add circles to the map.
+    L.circle(earthquakes[i].lat_lon, {
+      fillOpacity: 1,
+      color: "white",
+      fillColor: color,
+      // Adjust the radius.
+      radius: Math.sqrt(earthquakes[i].features.properties.mag) * 100
+    }).addTo(myMap);
+    
+    console.log(color);
+    
+   
+  
+  };
+
+  
 
   // Send our earthquakes layer to the createMap function/
   createMap(earthquakes);
 }
+
+
 
 function createMap(earthquakes) {
 
@@ -51,9 +103,10 @@ function createMap(earthquakes) {
   // Create our map, giving it the streetmap and earthquakes layers to display on load.
   var myMap = L.map("map", {
     center: [
-      37.09, -95.71
+      // 37.09, -95.71
+      0, 0
     ],
-    zoom: 5,
+    zoom: 2,
     layers: [street, earthquakes]
   });
 
