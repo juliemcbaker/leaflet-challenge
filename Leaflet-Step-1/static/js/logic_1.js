@@ -9,7 +9,7 @@ d3.json(queryUrl).then(function (data) {
 });
 
 function markerSize(magnitude) {
-  return Math.sqrt(magnitude) * 50;
+  return Math.sqrt(magnitude + 1) * 50;
 };
 
 function createFeatures(earthquakeData) {
@@ -40,37 +40,37 @@ function createFeatures(earthquakeData) {
     var lat_long = [lat, lon]
 
     // conditionals
-    var color = "";
-    if (depth > 200) {
-      color = "#00134d";
-    }
-    else if (depth > 100) {
-      color = "#002080";
-    }
-    else if (depth > 50) {
-      color = "#0033cc";
-    }
-    else if (depth > 25) {
-      color = "#1a53ff";
-    }
-    else if (depth > 10) {
-      color = "#4d79ff";
-    }
-    else {
-      color = "#99b3ff";
-    };
+    // var color = "";
+    // if (depth > 200) {
+    //   color = "#00134d";
+    // }
+    // else if (depth > 100) {
+    //   color = "#002080";
+    // }
+    // else if (depth > 50) {
+    //   color = "#0033cc";
+    // }
+    // else if (depth > 25) {
+    //   color = "#1a53ff";
+    // }
+    // else if (depth > 10) {
+    //   color = "#4d79ff";
+    // }
+    // else {
+    //   color = "#99b3ff";
+    // };
     // Add circles to the map.
     L.circle(earthquakeData[i].lat_long, {
       fillOpacity: 0.80,
-      color: color,
-      fillColor: color,
+      color: "blue",
+      fillColor: "green",
       // Adjust the radius.
       radius: markerSize(earthquakeData[i].properties.mag)
     })
     // .addTo(myMap)
     ;
     
-    console.log(color);
+    // console.log(color);
     
    
   
